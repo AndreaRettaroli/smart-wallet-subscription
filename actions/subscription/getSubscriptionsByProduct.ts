@@ -10,7 +10,6 @@ export async function getSubscriptionsByProduct(productId: string) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("User is not autenticathed");
-    // Check if a user with the given address or email already exists
     const subscriptions = await prisma.subscription.findMany({
       where: {
         productId: productId,

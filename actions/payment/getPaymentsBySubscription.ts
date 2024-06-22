@@ -6,21 +6,21 @@ import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient();
 
-export async function getSubscription(subscriptionId: string) {
+export async function getPaymentsBySubscription(subscriptionId: string) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("User is not autenticathed");
-    const subscription = await prisma.subscription.findFirst({
+    const payment = await prisma.payment.findMany({
       where: {
         id: subscriptionId,
       },
     });
-    if (!subscription) {
-      throw new Error("A subscription not found");
+    if (!payment) {
+      throw new Error("Failed to fetch payments");
     }
     return {
       success: true,
-      data: subscription,
+      data: payment,
     };
   } catch (error) {
     if (error instanceof Error) {

@@ -10,7 +10,6 @@ export async function createUser(formData: FormData) {
     email: formData.get("email") as string,
   };
   try {
-    // Check if a user with the given address or email already exists
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [{ address: rawFormData.address }, { email: rawFormData.email }],

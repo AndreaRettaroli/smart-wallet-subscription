@@ -15,7 +15,6 @@ export async function getUser(formData: FormData) {
     const session = await getServerSession(authOptions);
     if (!session) throw new Error("User is not autenticathed");
 
-    // Check if a user with the given address or email already exists
     const user = await prisma.user.findFirst({
       where: {
         OR: [{ address: rawFormData.address }, { email: rawFormData.email }],
