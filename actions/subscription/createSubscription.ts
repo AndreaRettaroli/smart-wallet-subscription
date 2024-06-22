@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient();
-
+//TODO: review to not allow double user for same productKey
 export async function createSubscription(formData: FormData) {
   const rawFormData = {
     sessionKey: formData.get("sessionKey") as string,
