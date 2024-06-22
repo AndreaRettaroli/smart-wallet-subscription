@@ -3,50 +3,51 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Product {
-  id              String          @id @default(uuid())
-  customerAPIkey  String
-  quota           Float
-  creationDate    DateTime?       @default(now())
-  period          Int
-  onSuccessURL    String
-  onFailURL       String
-  ownerId         String
-  owner           User            @relation(fields: [ownerId], references: [id])
-  subscriptions   Subscription[]
+  id             String         @id @default(uuid())
+  customerAPIkey String
+  quota          Float
+  creationDate   DateTime?      @default(now())
+  period         Int
+  onSuccessURL   String
+  onFailURL      String
+  ownerId        String
+  owner          User           @relation(fields: [ownerId], references: [id])
+  subscriptions  Subscription[]
 }
 
 model User {
-  id            String          @id @default(cuid())
-  address       String          @unique
-  email         String?         @unique
+  id            String         @id @default(cuid())
+  address       String         @unique
+  email         String?        @unique
   products      Product[]
   subscriptions Subscription[]
 }
 
 model Subscription {
-  id          String        @id @default(uuid())
-  sessionKey  String
-  status      SubscriptionStatus @default(active)
-  startDate   DateTime      @default(now())
-  productId   String
-  product     Product       @relation(fields: [productId], references: [id])
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  payments    Payment[]
+  id              String             @id @default(uuid())
+  sessionKey      String
+  status          SubscriptionStatus @default(active)
+  startDate       DateTime           @default(now())
+  productId       String
+  userId          String
+  nextPaymentDate DateTime
+  payments        Payment[]
+  product         Product            @relation(fields: [productId], references: [id])
+  user            User               @relation(fields: [userId], references: [id])
 }
 
 model Payment {
-  id              String     @id @default(uuid())
-  date            DateTime   @default(now())
-  tx              String
-  subscriptionId  String
-  subscription    Subscription @relation(fields: [subscriptionId], references: [id])
+  id             String       @id @default(uuid())
+  date           DateTime     @default(now())
+  tx             String
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
 }
 
 enum SubscriptionStatus {
@@ -54,5 +55,3 @@ enum SubscriptionStatus {
   disable
   interrupted
 }
-
-
