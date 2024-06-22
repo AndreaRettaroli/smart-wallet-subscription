@@ -8,9 +8,9 @@ const prisma = new PrismaClient();
 
 export async function createSubscription(formData: FormData) {
   const rawFormData = {
-    sessionKey: formData.get("onSuccessURL") as string,
-    productId: formData.get("onSuccessURL") as string,
-    userId: formData.get("onSuccessURL") as string,
+    sessionKey: formData.get("sessionKey") as string,
+    productId: formData.get("productId") as string,
+    userId: formData.get("userId") as string,
   };
   try {
     const session = await getServerSession(authOptions);
