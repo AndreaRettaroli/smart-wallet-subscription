@@ -27,12 +27,13 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
         } as unknown as FormData);
 
         let nextPayment = new Date(
-          new Date().setDate(new Date(item.nextPaymentDate).getDate() + 1)
+          new Date().setDate(new Date(item.nextPaymentDate ?? "").getDate() + 1)
         ); //as default retry to pay tomorrow
         if (response && response.success) {
           nextPayment = new Date(
             new Date().setDate(
-              new Date(item.nextPaymentDate).getDate() + item.product.period
+              new Date(item.nextPaymentDate ?? "").getDate() +
+                item.product.period
             )
           );
         }
