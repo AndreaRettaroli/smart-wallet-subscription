@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { baseSepolia } from "viem/chains";
 import { createSiweMessage, generateSiweNonce } from "viem/siwe";
 import { useAccount, useConnect, useConnectors, useSignMessage } from "wagmi";
-import { SiweMessage } from "siwe";
 
 export function ConnectButton() {
   const connectors = useConnectors();
@@ -45,7 +44,7 @@ function Siwe() {
       }
       const callbackUrl = "/";
       const nonce = generateSiweNonce();
-      const message = new SiweMessage({
+      const message = createSiweMessage({
         domain: window.location.host,
         address: address,
         statement: "Sign in with " + chain?.name + " to the app.",
@@ -54,22 +53,13 @@ function Siwe() {
         chainId: baseSepolia.id,
         nonce: nonce,
       });
-      const signature = await signMessageAsync({
-        message: message.prepareMessage(),
-      });
-      const result1 = await message.verify({
-        signature: signature,
-        domain: window.location.host,
-        nonce: nonce,
-      });
-      console.log("test: "+result1)
+      const signature = await signMessageAsync({ message });
       const result = await signIn("credentials", {
-        message: JSON.stringify(message),
+        message,
         signature,
         redirect: false,
         callbackUrl,
       });
-      
       result?.ok && router.refresh();
     } catch (e) {
       console.error(e);
