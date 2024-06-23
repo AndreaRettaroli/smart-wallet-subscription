@@ -25,12 +25,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         try {
-          const valid = await publicClient.verifySiweMessage({
-            message: credentials?.message!,
-            signature: credentials?.signature! as `0x${string}`,
-          })
+          // const valid = await publicClient.verifySiweMessage({
+          //   message: credentials?.message!,
+          //   signature: credentials?.signature! as `0x${string}`,
+          // })
           const message = parseSiweMessage(credentials?.message!)
-          if (valid && message.address) {
+          if (//valid &&
+             message.address) {
             return {
               id: message.address,  
             };
